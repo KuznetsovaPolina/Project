@@ -2,6 +2,9 @@
 {% block content %}
 <div class="container">
     <h2>Payment for Booking: {{ booking.id }}</h2>
+    <p>Event: {{ booking.event.name }}</p>
+    <p>Location: {{ booking.event.location }}</p>
+    <p>Date: {{ booking.event.date.strftime('%Y-%m-%d %H:%M') }}</p>
     <form method="post">
         <button type="submit" class="btn btn-primary">Pay Now</button>
     </form>

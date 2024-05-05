@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">My Bookings</h1>
+    {% if bookings %}
+        <div class="row">
+            {% for booking in bookings %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ booking.event.name }}</h5>
+                        <p class="card-text">{{ booking.event.location }}</p>
+                        <p class="card-text">{{ booking.event.date.strftime('%Y-%m-%d %H:%M') }}</p>
+                        {% if booking.is_paid %}
+                            <span class="badge badge-success">Paid</span>
+                        {% else %}
+                            <span class="badge badge-warning">Unpaid</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no booked events.</p>
+    {% endif %}
+</div>
+{% endblock %}

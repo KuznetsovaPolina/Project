@@ -54,16 +54,20 @@ def logout():
 
 @app.route('/generate_events')
 def generate_events():
+    # Удаление всех существующих мероприятий
+    Event.query.delete()
+
+    # Генерация новых мероприятий с использованием генеративных сервисов
     events = []
-    for _ in range(10):  # Generate 10 events
-        event_name = fake.text(max_nb_chars=50)  # Event name
-        location = fake.city()  # Event location
-        date = datetime.now() + timedelta(days=random.randint(1, 30))  # Event date
+    for _ in range(10):  # Генерация 10 новых мероприятий
+        event_name = fake.text(max_nb_chars=50)  # Название мероприятия
+        location = fake.city()  # Место проведения мероприятия
+        date = datetime.now() + timedelta(days=random.randint(1, 30))  # Дата проведения мероприятия
         events.append({'name': event_name, 'location': location, 'date': date})
 
     db.session.bulk_insert_mappings(Event, events)
     db.session.commit()
-    flash('10 new events were generated!')
+    flash('All existing events were deleted and new events were generated!')
     return redirect(url_for('home'))
 
 @app.route('/book/<int:event_id>', methods=['GET', 'POST'])
@@ -95,10 +99,29 @@ def internal_error(error):
 def payment(booking_id):
     booking = Booking.query.get_or_404(booking_id)
     if request.method == 'POST':
-        # Здесь может быть логика обработки платежных данных
+        # Здесь может быть логика обработки платежных данных (заглушка)
         booking.is_paid = True
         db.session.commit()
-        flash('Payment successful. Your booking is now confirmed.', 'success')
+        flash('Payment processed successfully.', 'success')
         return redirect(url_for('home'))
     
     return render_template('payment.html', booking=booking)
+
+@app.route('/events_delete') 
+def events_delete():
+    # Удаление всех существующих мероприятий
+    Event.query.delete()
+    Booking.query.delete()
+    events = []
+    books = []
+    db.session.bulk_insert_mappings(Event, events)
+    db.session.bulk_insert_mappings(Booking, books)
+    db.session.commit()
+    flash('Events & books delete!')
+    return redirect(url_for('home'))
+    
+@app.route('/bookings')
+@login_required
+def bookings():
+    bookings = Booking.query.join(Event).filter(Booking.user_id == current_user.id, Event.id != None).all()
+    return render_template('bookings.html', bookings=bookings)

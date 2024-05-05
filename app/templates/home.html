@@ -11,7 +11,18 @@
                     <h5 class="card-title">{{ event.name }}</h5>
                     <p class="card-text">{{ event.location }}</p>
                     <p class="card-text">{{ event.date.strftime('%Y-%m-%d %H:%M') }}</p>
-                    <a href="{{ url_for('book', event_id=event.id) }}" class="btn btn-primary">Book Now</a>
+                    {% if current_user.is_authenticated %}
+                        {% set booking = current_user.bookings|selectattr('event_id', '==', event.id)|first %}
+                        {% if booking %}
+                            {% if not booking.is_paid %}
+                                <a href="{{ url_for('payment', booking_id=booking.id) }}" class="btn btn-success">Pay</a>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ url_for('book', event_id=event.id) }}" class="btn btn-primary">Book Now</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-primary">Login to Book</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
