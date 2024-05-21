@@ -56,3 +56,7 @@ run.py
 Разработка мобильного приложения.
 
 Расширение функционала личного кабинета пользователя.
+
+![image](https://github.com/KuznetsovaPolina/Project/assets/94856108/9a876ea9-e7d7-4a94-952c-f503a0f3833a)
+![image](https://github.com/KuznetsovaPolina/Project/assets/94856108/ecfd1bfa-9396-4e1a-a764-ac80704aecb9)
+![image](https://github.com/KuznetsovaPolina/Project/assets/94856108/a8148e10-06a2-4ffa-8e62-f4ed01256034)
