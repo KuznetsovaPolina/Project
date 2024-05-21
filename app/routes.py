@@ -11,7 +11,12 @@ fake = Faker()
 
 @app.route('/')
 @app.route('/home')
-def home():
+def home() -> str:
+    """Отображает главную страницу со списком предстоящих событий.
+
+    Returns:
+        str: HTML-код главной страницы.
+    """
     if current_user.is_authenticated:
         user_preferences = current_user.preferences.split(',') if current_user.preferences else []
         preferred_events = Event.query.filter(Event.genre.in_(user_preferences)).all()
@@ -22,7 +27,12 @@ def home():
     return render_template('home.html', events=events)
 
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+def register() -> str:
+    """Обрабатывает регистрацию новых пользователей.
+
+    Returns:
+        str: HTML-код страницы регистрации или перенаправление на страницу входа после успешной регистрации.
+    """
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -40,7 +50,12 @@ def register():
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def login() -> str:
+    """Обрабатывает вход пользователей в систему.
+
+    Returns:
+        str: HTML-код страницы входа или перенаправление на главную страницу после успешного входа.
+    """
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -54,14 +69,23 @@ def login():
 
 @app.route('/logout')
 @login_required
-def logout():
+def logout() -> str:
+    """Выход пользователя из системы.
+
+    Returns:
+        str: Перенаправление на главную страницу.
+    """
     logout_user()
     flash('You have successfully logged out.')
     return redirect(url_for('home'))
 
 @app.route('/generate_events')
-def generate_events():
-    # Удаление всех существующих мероприятий
+def generate_events() -> str:
+    """Генерирует набор случайных событий и сохраняет их в базе данных.
+
+    Returns:
+        str: Перенаправление на главную страницу.
+    """
     Event.query.delete()
 
     # Генерация новых мероприятий с использованием генеративных сервисов
@@ -82,7 +106,15 @@ def generate_events():
 
 @app.route('/book/<int:event_id>', methods=['GET', 'POST'])
 @login_required
-def book(event_id):
+def book(event_id: int) -> str:
+    """Обрабатывает бронирование билета на событие.
+
+    Args:
+        event_id (int): ID события.
+
+    Returns:
+        str: Перенаправление на главную страницу.
+    """
     event = Event.query.get_or_404(event_id)
     try:
         booking = Booking(user_id=current_user.id, event_id=event.id)
@@ -95,18 +127,42 @@ def book(event_id):
     return redirect(url_for('home'))
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(e) -> tuple[str, int]:
+    """Обрабатывает ошибку 404 (страница не найдена).
+
+    Args:
+        e: Объект ошибки.
+
+    Returns:
+        Tuple[str, int]: HTML-код страницы ошибки и код статуса 404.
+    """
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
-def internal_error(error):
-    db.session.rollback()  # Ensure any failed database sessions don't interfere with access
+def internal_error(error) -> tuple[str, int]:
+    """Обрабатывает внутреннюю ошибку сервера (код 500).
+
+    Args:
+        error: Объект ошибки.
+
+    Returns:
+        Tuple[str, int]: HTML-код страницы ошибки и код статуса 500.
+    """
+    db.session.rollback() 
     return render_template('500.html'), 500
 
 
 @app.route('/payment/<int:booking_id>', methods=['GET', 'POST'])
 @login_required
-def payment(booking_id):
+def payment(booking_id) -> str:
+    """Обрабатывает оплату бронирования.
+
+    Args:
+        booking_id (int): ID бронирования.
+
+    Returns:
+        str: HTML-код страницы оплаты или перенаправление на главную страницу после успешной оплаты.
+    """
     booking = Booking.query.get_or_404(booking_id)
     if request.method == 'POST':
         # Здесь может быть логика обработки платежных данных (заглушка)
@@ -118,8 +174,12 @@ def payment(booking_id):
     return render_template('payment.html', booking=booking)
 
 @app.route('/events_delete') 
-def events_delete():
-    # Удаление всех существующих мероприятий
+def events_delete() -> str:
+    """Удаляет все события и бронирования из базы данных.
+
+    Returns:
+        str: Перенаправление на главную страницу.
+    """
     Event.query.delete()
     Booking.query.delete()
     events = []
@@ -132,12 +192,22 @@ def events_delete():
     
 @app.route('/bookings')
 @login_required
-def bookings():
+def bookings() -> str:
+    """Отображает страницу с бронированиями текущего пользователя.
+
+    Returns:
+        str: HTML-код страницы с бронированиями.
+    """
     bookings = Booking.query.join(Event).filter(Booking.user_id == current_user.id, Event.id != None).all()
     return render_template('bookings.html', bookings=bookings)
 
 @app.route('/search')
-def search():
+def search() -> str:
+    """Обрабатывает запросы поиска и фильтрации событий.
+
+    Returns:
+        str: HTML-код страницы с результатами поиска.
+    """
     query = request.args.get('query', '')
     genre = request.args.get('genre', '')
     min_rating = request.args.get('min_rating', 0, type=float)
