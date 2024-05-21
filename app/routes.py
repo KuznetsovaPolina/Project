@@ -12,7 +12,13 @@ fake = Faker()
 @app.route('/')
 @app.route('/home')
 def home():
-    events = Event.query.all()
+    if current_user.is_authenticated:
+        user_preferences = current_user.preferences.split(',') if current_user.preferences else []
+        preferred_events = Event.query.filter(Event.genre.in_(user_preferences)).all()
+        other_events = Event.query.filter(Event.genre.notin_(user_preferences)).all()
+        events = preferred_events + other_events
+    else:
+        events = Event.query.all()
     return render_template('home.html', events=events)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -20,9 +26,10 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        preferences = request.form.get('preferences', '') # Получение предпочтений
         try:
             hashed_password = generate_password_hash(password)
-            user = User(username=username, password_hash=hashed_password)
+            user = User(username=username, password_hash=hashed_password, preferences=preferences)
             db.session.add(user)
             db.session.commit()
             flash('Registration successful!')
@@ -59,11 +66,14 @@ def generate_events():
 
     # Генерация новых мероприятий с использованием генеративных сервисов
     events = []
+    genres = ['Concert', 'Festival', 'Theater', 'Exhibition', 'Sport']
     for _ in range(10):  # Генерация 10 новых мероприятий
         event_name = fake.text(max_nb_chars=50)  # Название мероприятия
         location = fake.city()  # Место проведения мероприятия
         date = datetime.now() + timedelta(days=random.randint(1, 30))  # Дата проведения мероприятия
-        events.append({'name': event_name, 'location': location, 'date': date})
+        genre = random.choice(genres) # Случайный выбор жанра
+        rating = round(random.uniform(0, 5), 1) # Случайный рейтинг
+        events.append({'name': event_name, 'location': location, 'date': date, 'genre': genre, 'rating': rating})
 
     db.session.bulk_insert_mappings(Event, events)
     db.session.commit()
@@ -125,3 +135,23 @@ def events_delete():
 def bookings():
     bookings = Booking.query.join(Event).filter(Booking.user_id == current_user.id, Event.id != None).all()
     return render_template('bookings.html', bookings=bookings)
+
+@app.route('/search')
+def search():
+    query = request.args.get('query', '')
+    genre = request.args.get('genre', '')
+    min_rating = request.args.get('min_rating', 0, type=float)
+    location = request.args.get('location', '')
+
+    events = Event.query
+    if query:
+        events = events.filter(Event.name.ilike(f'%{query}%'))
+    if genre:
+        events = events.filter_by(genre=genre)
+    if min_rating:
+        events = events.filter(Event.rating >= min_rating)
+    if location:
+        events = events.filter(Event.location.ilike(f'%{location}%'))
+    events = events.all()
+
+    return render_template('home.html', events=events)

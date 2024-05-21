@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    preferences = db.Column(db.String(255))
     bookings = db.relationship('Booking', backref='user', lazy=True)
 
     def set_password(self, password):
@@ -24,6 +25,8 @@ class Event(db.Model):
     name = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(100), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
+    genre = db.Column(db.String(50)) 
+    rating = db.Column(db.Float, default=0.0) 
     bookings = db.relationship('Booking', backref='event', lazy=True, cascade='all, delete-orphan')
 
 class Booking(db.Model):

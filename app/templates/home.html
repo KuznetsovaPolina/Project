@@ -3,6 +3,31 @@
 {% block content %}
 <div class="container mt-4">
     <h1 class="mb-4">Upcoming Events</h1>
+        <form method="GET" action="{{ url_for('search') }}" class="mb-4">
+            <div class="form-row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="query" placeholder="Search by name...">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" name="genre">
+                        <option value="">All Genres</option>
+                        <option value="Concert">Concert</option>
+                        <option value="Festival">Festival</option>
+                        <option value="Theater">Theater</option>
+                        <option value="Exhibition">Exhibition</option>
+                        <option value="Sport">Sport</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" class="form-control" name="min_rating" min="0" max="5" step="0.1" placeholder="Min. Rating">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="location" placeholder="Location...">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        </form>
+
     <div class="row">
         {% for event in events %}
         <div class="col-md-4 mb-3">
@@ -10,6 +35,8 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ event.name }}</h5>
                     <p class="card-text">{{ event.location }}</p>
+                    <p class="card-text">Genre: {{ event.genre }}</p>
+                    <p class="card-text">Rating: {{ event.rating }}</p>
                     <p class="card-text">{{ event.date.strftime('%Y-%m-%d %H:%M') }}</p>
                     {% if current_user.is_authenticated %}
                         {% set booking = current_user.bookings|selectattr('event_id', '==', event.id)|first %}
