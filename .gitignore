@@ -1,5 +1,4 @@
 __pycache__/
 *.pyc
-site.db
 tempCodeRunnerFile.py
 .env
