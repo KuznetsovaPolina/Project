@@ -6,9 +6,9 @@ from flask_login import LoginManager
 app = Flask(__name__)
 
 # Конфигурация приложения
-app.config['SECRET_KEY'] = 'your-secret-key'  # Замените на ваш реальный секретный ключ
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # Или другая база данных
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Отключение предупреждений и лишней нагрузки
+app.config['SECRET_KEY'] = 'your-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Инициализация расширений
 db = SQLAlchemy(app)
