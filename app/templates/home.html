@@ -6,23 +6,23 @@
         <form method="GET" action="{{ url_for('search') }}" class="mb-4">
             <div class="form-row">
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="query" placeholder="Search by name...">
+                    <input type="text" class="form-control" name="query" placeholder="Search by name..." value="{{ query }}"> 
                 </div>
                 <div class="col-md-3">
                     <select class="form-control" name="genre">
                         <option value="">All Genres</option>
-                        <option value="Concert">Concert</option>
-                        <option value="Festival">Festival</option>
-                        <option value="Theater">Theater</option>
-                        <option value="Exhibition">Exhibition</option>
-                        <option value="Sport">Sport</option>
+                        <option value="Concert" {% if genre == 'Concert' %}selected{% endif %}>Concert</option>
+                        <option value="Festival" {% if genre == 'Festival' %}selected{% endif %}>Festival</option>
+                        <option value="Theater" {% if genre == 'Theater' %}selected{% endif %}>Theater</option>
+                        <option value="Exhibition" {% if genre == 'Exhibition' %}selected{% endif %}>Exhibition</option>
+                        <option value="Sport" {% if genre == 'Sport' %}selected{% endif %}>Sport</option>
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="min_rating" min="0" max="5" step="0.1" placeholder="Min. Rating">
+                    <input type="number" class="form-control" name="min_rating" min="0" max="5" step="0.1" placeholder="Min. Rating" value="{{ min_rating }}"> 
                 </div>
                 <div class="col-md-3">
-                    <input type="text" class="form-control" name="location" placeholder="Location...">
+                    <input type="text" class="form-control" name="location" placeholder="Location..." value="{{ location }}"> 
                 </div>
             </div>
             <button type="submit" class="btn btn-primary mt-2">Search</button>

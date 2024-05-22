@@ -86,7 +86,6 @@ def generate_events() -> str:
     Returns:
         str: Перенаправление на главную страницу.
     """
-    Event.query.delete()
 
     # Генерация новых мероприятий с использованием генеративных сервисов
     events = []
@@ -222,6 +221,10 @@ def search() -> str:
         events = events.filter(Event.rating >= min_rating)
     if location:
         events = events.filter(Event.location.ilike(f'%{location}%'))
-    events = events.all()
-
-    return render_template('home.html', events=events)
+    events = events.order_by(Event.rating.desc()).all()
+    return render_template('home.html', 
+                              events=events, 
+                              query=query, 
+                              genre=genre, 
+                              min_rating=min_rating, 
+                              location=location) 
