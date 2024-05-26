@@ -6,14 +6,24 @@
     <title>{% block title %}Title{% endblock %}</title>
     <style>
         body.light-theme {
-            background-color: #D7CFDB; /* Установка цвета фона для светлой темы */
+            background-color: #D7CFDB; /* Цвет фона для светлой темы */
             color: #121212;
         }
         .navbar.light-theme {
-            background-color: #D7CFDB; /* Установка цвета фона для верхней панели в светлой теме */
+            background-color: #828DBB; /* Цвет фона для верхней панели в светлой теме */
+        }
+        .light-theme .btn-primary {
+            background-color: #828DBB;
+            border-color: #828DBB;
+            color: #fff;
+        }
+        
+        .light-theme .btn-primary:hover {
+            background-color: #6E7AAB;
+            border-color: #6E7AAB;
         }
         body.dark-theme {
-            background-color: #121212;
+            background-color: #0A0B24;
             color: #e0e0e0;
         }
         .navbar {
@@ -37,15 +47,18 @@
         .navbar-dark .navbar-toggler-icon {
             background-color: #fff; 
         }
-        .card.dark-theme {
-            background-color: #1f1f1f;
-            color: #e0e0e0;
+        .card.light-theme {
+            background-color: #C7BBD7; /* Цвет фона карточки для светлой темы */
+            color: #121212;
         }
+        .card.dark-theme {
+            background-color: #7D5683; /* Цвет фона карточки для темной темы */
+            color: #e0e0e0;
+        }        
         .profile-button {
             border-radius: 50%;
             width: 65px;
             height: 65px;
-            background-color: #7D5683; /* Основной цвет кнопки */
             color: #fff;
             display: flex;
             align-items: center;
@@ -58,9 +71,9 @@
             position: absolute;
             top: calc(100% + 10px);
             right: auto;
-            left: calc(100% - 190px);
+            left: calc(100% - 160px);
             z-index: 1000;
-            width: 200px;
+            width: 170px;
             max-height: calc(100vh - 110px);
             overflow-y: auto;
             background-color: #402158; /* Вспомогательный цвет фона для меню */
@@ -72,6 +85,14 @@
         .btn {
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+        .dropdown-menu.light-theme {
+            background-color: #828DBB; /* Цвет фона для меню в светлой теме */
+            color: #121212;
+        }
+        .dropdown-menu.dark-theme {
+            background-color: #402158; /* Цвет фона для меню в темной теме */
+            color: #e0e0e0;
+        }        
         .dark-theme .btn-primary {
             background-color: #402158;
             border-color: #402158;
@@ -91,15 +112,12 @@
         .dark-theme .btn-pay:hover {
             background-color: #331645;
             border-color: #331645;
-        }
-        .card.dark-theme {
-            background-color: #7D5683; /* Изменение цвета фона карточки */
-            color: #e0e0e0;
-        }        
+        }      
     </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg">
+
+<body class="light-theme">
+    <nav class="navbar navbar-expand-lg light-theme">
         <a class="navbar-brand" href="{{ url_for('home') }}">EventBooker</a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto align-items-center">
@@ -122,7 +140,6 @@
             </ul>
         </div>
     </nav>
-    
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -143,13 +160,18 @@
             const themeToggle = document.getElementById('theme-toggle');
             const navbar = document.querySelector('.navbar');
             const currentTheme = localStorage.getItem('theme') || 'light';
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+
     
             if (currentTheme === 'dark') {
                 document.body.classList.add('dark-theme');
                 navbar.classList.add('navbar-dark', 'dark-theme');
+                dropdownMenu.classList.add('dark-theme');
                 themeToggle.textContent = 'Switch to Light Theme';
             } else {
-                navbar.classList.add('navbar-light', 'bg-light');
+                navbar.classList.add('navbar-light', 'light-theme');
+                dropdownMenu.classList.add('light-theme');
+
             }
     
             themeToggle.addEventListener('click', function() {
@@ -157,11 +179,21 @@
                 navbar.classList.toggle('navbar-dark');
                 navbar.classList.toggle('dark-theme');
                 navbar.classList.toggle('navbar-light');
-                navbar.classList.toggle('bg-light');
+                navbar.classList.toggle('light-theme');
+                dropdownMenu.classList.toggle('light-theme');
+                dropdownMenu.classList.toggle('dark-theme');
     
                 const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
                 localStorage.setItem('theme', theme);
+                document.cookie = `theme=${theme}`;
                 themeToggle.textContent = theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme';
+    
+                // Добавляем класс карточкам в соответствии с текущей темой
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    card.classList.toggle('dark-theme', theme === 'dark');
+                    card.classList.toggle('light-theme', theme === 'light');
+                });
             });
     
             document.addEventListener('click', function(event) {
@@ -172,7 +204,6 @@
                 }
             });
         });
-        
-    </script>
+    </script>               
 </body>
 </html>
