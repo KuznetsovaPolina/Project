@@ -4,8 +4,126 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{% block title %}Title{% endblock %}</title>
+    <style>
+        body.light-theme {
+            background-color: #D7CFDB; /* Установка цвета фона для светлой темы */
+            color: #121212;
+        }
+        .navbar.light-theme {
+            background-color: #D7CFDB; /* Установка цвета фона для верхней панели в светлой теме */
+        }
+        body.dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .navbar {
+            transition: background-color 0.3s ease;
+        }
+        .navbar.dark-theme {
+            background-color: #402158; /* Вспомогательный цвет фона для верхней панели */
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.5); /* Цвет ссылок на верхней панели */
+        }
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #fff; /* Цвет ссылок при наведении на верхнюю панель */
+        }
+        .navbar-dark .navbar-brand {
+            color: #fff; /* Цвет текста логотипа на верхней панели */
+        }
+        .navbar-dark .navbar-brand:hover {
+            color: #fff; /* Цвет текста логотипа при наведении на верхнюю панель */
+        }
+        .navbar-dark .navbar-toggler-icon {
+            background-color: #fff; 
+        }
+        .card.dark-theme {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+        }
+        .profile-button {
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            background-color: #7D5683; /* Основной цвет кнопки */
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            position: relative;
+            z-index: 1001;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: auto;
+            left: calc(100% - 190px);
+            z-index: 1000;
+            width: 200px;
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
+            background-color: #402158; /* Вспомогательный цвет фона для меню */
+        }
+        .dropdown-item {
+            width: 100%;
+            color: #e0e0e0; /* Цвет текста элементов меню */
+        }
+        .btn {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .dark-theme .btn-primary {
+            background-color: #402158;
+            border-color: #402158;
+        }
+        .dark-theme .btn-primary:hover {
+            background-color: #331645;
+            border-color: #331645;
+        }
+        .btn-pay {
+            background-color: #28a745; /* Green color for light theme */
+            border-color: #28a745;
+        }
+        .dark-theme .btn-pay {
+            background-color: #402158; /* Color for dark theme */
+            border-color: #402158;
+        }
+        .dark-theme .btn-pay:hover {
+            background-color: #331645;
+            border-color: #331645;
+        }
+        .card.dark-theme {
+            background-color: #7D5683; /* Изменение цвета фона карточки */
+            color: #e0e0e0;
+        }        
+    </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="{{ url_for('home') }}">EventBooker</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="theme-toggle">Switch to Dark Theme</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="profile-button dropdown-toggle" href="#" id="profile-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Profile
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profile-dropdown">
+                        <a class="dropdown-item" href="{{ url_for('bookings') }}">My Bookings</a>
+                        <a class="dropdown-item" href="{{ url_for('generate_events') }}">Events generate</a>
+                        <a class="dropdown-item" href="{{ url_for('events_delete') }}">Events delete</a>
+                        <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url_for('account') }}">Personal Account</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul class="flashes">
@@ -18,37 +136,43 @@
     {% block content %}{% endblock %}
   
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const navbar = document.querySelector('.navbar');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+    
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                navbar.classList.add('navbar-dark', 'dark-theme');
+                themeToggle.textContent = 'Switch to Light Theme';
+            } else {
+                navbar.classList.add('navbar-light', 'bg-light');
+            }
+    
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                navbar.classList.toggle('navbar-dark');
+                navbar.classList.toggle('dark-theme');
+                navbar.classList.toggle('navbar-light');
+                navbar.classList.toggle('bg-light');
+    
+                const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+                localStorage.setItem('theme', theme);
+                themeToggle.textContent = theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme';
+            });
+    
+            document.addEventListener('click', function(event) {
+                const dropdown = document.querySelector('.dropdown-menu');
+                const profileButton = document.getElementById('profile-dropdown');
+                if (event.target !== profileButton && !profileButton.contains(event.target) && event.target !== dropdown && !dropdown.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        });
+        
+    </script>
 </body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{ url_for('home') }}">EventBooker</a>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('bookings') }}">My Bookings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('events_delete') }}">Events delete</a>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('generate_events') }}">Events generate</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">Hello, {{ current_user.username }}</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
-  </nav>
 </html>

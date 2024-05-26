@@ -6,6 +6,8 @@ from .models import User, Event, Booking
 from faker import Faker
 import random
 from datetime import datetime, timedelta
+from flask import render_template
+
 
 fake = Faker()
 
@@ -228,3 +230,9 @@ def search() -> str:
                               genre=genre, 
                               min_rating=min_rating, 
                               location=location) 
+
+@app.route('/account')
+@login_required
+def account():
+    user = current_user  # Получаем текущего пользователя из Flask-Login
+    return render_template('account.html', user=user)
