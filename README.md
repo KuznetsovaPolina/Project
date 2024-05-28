@@ -68,6 +68,12 @@ python run.py
 ![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/e451d229-aab7-4a21-878e-f35f3e9d00a5)
 ![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/a2d9241b-2794-45a1-8147-e03fdc8d5792)
 ![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/ce395acc-a3a4-4a40-bbaa-29fb5c0c5b1a)
+![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/292663a1-8d06-4e69-8d6c-1970dcf2c435)
+![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/e9fde44d-6548-4556-92ca-27d75945c67a)
+![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/ac6a6719-5a6d-4796-ad4f-50224328a3dd)
+
+
+
 
 
 
