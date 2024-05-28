@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Personal Account{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Welcome!</h1>
+    <p>Your login: {{ user.username }}</p>
+    <p>Events you are registered for: {{ registered_events_count }}</p>
+    <p>Events you have purchased tickets for: {{ purchased_tickets_count }}</p>
+</div>
+{% endblock %}

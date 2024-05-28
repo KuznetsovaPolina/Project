@@ -4,8 +4,144 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{% block title %}Title{% endblock %}</title>
+    <style>
+        body.light-theme {
+            background-color: #D7CFDB; /* Цвет фона для светлой темы */
+            color: #121212;
+        }
+        .navbar.light-theme {
+            background-color: #828DBB; /* Цвет фона для верхней панели в светлой теме */
+        }
+        .light-theme .btn-primary {
+            background-color: #828DBB;
+            border-color: #828DBB;
+            color: #fff;
+        }
+        
+        .light-theme .btn-primary:hover {
+            background-color: #6E7AAB;
+            border-color: #6E7AAB;
+        }
+        body.dark-theme {
+            background-color: #0A0B24;
+            color: #e0e0e0;
+        }
+        .navbar {
+            transition: background-color 0.3s ease;
+        }
+        .navbar.dark-theme {
+            background-color: #402158; /* Вспомогательный цвет фона для верхней панели */
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.5); /* Цвет ссылок на верхней панели */
+        }
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #fff; /* Цвет ссылок при наведении на верхнюю панель */
+        }
+        .navbar-dark .navbar-brand {
+            color: #fff; /* Цвет текста логотипа на верхней панели */
+        }
+        .navbar-dark .navbar-brand:hover {
+            color: #fff; /* Цвет текста логотипа при наведении на верхнюю панель */
+        }
+        .navbar-dark .navbar-toggler-icon {
+            background-color: #fff; 
+        }
+        .card.light-theme {
+            background-color: #C7BBD7; /* Цвет фона карточки для светлой темы */
+            color: #121212;
+        }
+        .card.dark-theme {
+            background-color: #7D5683; /* Цвет фона карточки для темной темы */
+            color: #e0e0e0;
+        }        
+        .profile-button {
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            position: relative;
+            z-index: 1001;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: auto;
+            left: calc(100% - 160px);
+            z-index: 1000;
+            width: 170px;
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
+            background-color: #402158; /* Вспомогательный цвет фона для меню */
+        }
+        .dropdown-item {
+            width: 100%;
+            color: #e0e0e0; /* Цвет текста элементов меню */
+        }
+        .btn {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .dropdown-menu.light-theme {
+            background-color: #828DBB; /* Цвет фона для меню в светлой теме */
+            color: #121212;
+        }
+        .dropdown-menu.dark-theme {
+            background-color: #402158; /* Цвет фона для меню в темной теме */
+            color: #e0e0e0;
+        }        
+        .dark-theme .btn-primary {
+            background-color: #402158;
+            border-color: #402158;
+        }
+        .dark-theme .btn-primary:hover {
+            background-color: #331645;
+            border-color: #331645;
+        }
+        .btn-pay {
+            background-color: #28a745; /* Green color for light theme */
+            border-color: #28a745;
+        }
+        .dark-theme .btn-pay {
+            background-color: #402158; /* Color for dark theme */
+            border-color: #402158;
+        }
+        .dark-theme .btn-pay:hover {
+            background-color: #331645;
+            border-color: #331645;
+        }      
+    </style>
 </head>
-<body>
+
+<body class="light-theme">
+    <nav class="navbar navbar-expand-lg light-theme">
+        <a class="navbar-brand" href="{{ url_for('home') }}">EventBooker</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="theme-toggle">Switch to Dark Theme</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="profile-button dropdown-toggle" href="#" id="profile-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Profile
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profile-dropdown">
+                        <a class="dropdown-item" href="{{ url_for('bookings') }}">My Bookings</a>
+                        <a class="dropdown-item" href="{{ url_for('generate_events') }}">Events generate</a>
+                        <a class="dropdown-item" href="{{ url_for('events_delete') }}">Events delete</a>
+                        <a class="dropdown-item" href="{{ url_for('register') }}">Register</a>
+                        <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url_for('account') }}">Personal Account</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul class="flashes">
@@ -18,37 +154,57 @@
     {% block content %}{% endblock %}
   
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const navbar = document.querySelector('.navbar');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                navbar.classList.add('navbar-dark', 'dark-theme');
+                dropdownMenu.classList.add('dark-theme');
+                themeToggle.textContent = 'Switch to Light Theme';
+            } else {
+                navbar.classList.add('navbar-light', 'light-theme');
+                dropdownMenu.classList.add('light-theme');
+
+            }
+    
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                navbar.classList.toggle('navbar-dark');
+                navbar.classList.toggle('dark-theme');
+                navbar.classList.toggle('navbar-light');
+                navbar.classList.toggle('light-theme');
+                dropdownMenu.classList.toggle('light-theme');
+                dropdownMenu.classList.toggle('dark-theme');
+    
+                const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+                localStorage.setItem('theme', theme);
+                document.cookie = `theme=${theme}`;
+                themeToggle.textContent = theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme';
+    
+                // Добавляем класс карточкам в соответствии с текущей темой
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    card.classList.toggle('dark-theme', theme === 'dark');
+                    card.classList.toggle('light-theme', theme === 'light');
+                });
+            });
+    
+            document.addEventListener('click', function(event) {
+                const dropdown = document.querySelector('.dropdown-menu');
+                const profileButton = document.getElementById('profile-dropdown');
+                if (event.target !== profileButton && !profileButton.contains(event.target) && event.target !== dropdown && !dropdown.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        });
+    </script>               
 </body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{ url_for('home') }}">EventBooker</a>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('bookings') }}">My Bookings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('events_delete') }}">Events delete</a>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('generate_events') }}">Events generate</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">Hello, {{ current_user.username }}</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
-  </nav>
 </html>

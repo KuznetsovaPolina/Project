@@ -6,6 +6,8 @@ from .models import User, Event, Booking
 from faker import Faker
 import random
 from datetime import datetime, timedelta
+from flask import render_template
+
 
 fake = Faker()
 
@@ -24,7 +26,8 @@ def home() -> str:
         events = preferred_events + other_events
     else:
         events = Event.query.all()
-    return render_template('home.html', events=events)
+    current_theme = request.cookies.get('theme', 'light')  # Получаем текущую тему из куки
+    return render_template('home.html', events=events, current_theme=current_theme)  # Передаем текущую тему в контекст шаблона
 
 @app.route('/register', methods=['GET', 'POST'])
 def register() -> str:
@@ -228,3 +231,16 @@ def search() -> str:
                               genre=genre, 
                               min_rating=min_rating, 
                               location=location) 
+
+@app.route('/account')
+@login_required
+def account():
+    user = current_user  # Получаем текущего пользователя из Flask-Login
+
+    # Подсчет событий на которые пользователь зарегистрировался
+    registered_events_count = Booking.query.filter_by(user_id=user.id).count()
+
+    # Подсчет событий на которые пользователь купил билеты
+    purchased_tickets_count = Booking.query.filter_by(user_id=user.id, is_paid=True).count()
+
+    return render_template('account.html', user=user, registered_events_count=registered_events_count, purchased_tickets_count=purchased_tickets_count)
