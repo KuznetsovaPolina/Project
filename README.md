@@ -65,10 +65,9 @@ python run.py
 
 ## Скриншоты, демонстрирующие работу проекта.:
 
-![image](https://github.com/KuznetsovaPolina/Project/assets/94856108/9a876ea9-e7d7-4a94-952c-f503a0f3833a)
+![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/e451d229-aab7-4a21-878e-f35f3e9d00a5)
+![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/a2d9241b-2794-45a1-8147-e03fdc8d5792)
+![image](https://github.com/KuznetsovaPolina/Project/assets/107554629/ce395acc-a3a4-4a40-bbaa-29fb5c0c5b1a)
 
-![image](https://github.com/KuznetsovaPolina/Project/assets/94856108/e11c42fc-628f-4fe1-8bb1-9597edc1e4d2)
 
-![image](https://github.com/KuznetsovaPolina/Project/assets/94856108/ecfd1bfa-9396-4e1a-a764-ac80704aecb9)
 
-![image](https://github.com/KuznetsovaPolina/Project/assets/94856108/a8148e10-06a2-4ffa-8e62-f4ed01256034)
